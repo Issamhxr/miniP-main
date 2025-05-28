@@ -1,0 +1,22 @@
+{
+	"/": [],
+	"/admin": [
+		"src/routes/admin/+page.server.js"
+	],
+	"/admin/clients": [],
+	"/admin/employees": [],
+	"/admin/services": [
+		"src/routes/admin/services/+page.server.ts"
+	],
+	"/admin/serv": [
+		"src/routes/admin/serv/+page.server.ts"
+	],
+	"/admin/settings": [],
+	"/admin/tickets": [],
+	"/api/service/[id]": [
+		"src/routes/api/service/[id]/+server.ts"
+	],
+	"/test": [
+		"src/routes/test/+page.ts"
+	]
+}
