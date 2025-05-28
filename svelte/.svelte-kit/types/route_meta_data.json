@@ -12,7 +12,9 @@
 		"src/routes/admin/serv/+page.server.ts"
 	],
 	"/admin/settings": [],
-	"/admin/tickets": [],
+	"/admin/tickets": [
+		"src/routes/admin/tickets/+page.server.js"
+	],
 	"/api/service/[id]": [
 		"src/routes/api/service/[id]/+server.ts"
 	],

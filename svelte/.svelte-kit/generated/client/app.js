@@ -31,7 +31,7 @@ export const dictionary = {
 		"/admin/services": [~14,[2,6]],
 		"/admin/serv": [~13,[2,5]],
 		"/admin/settings": [15,[2,7]],
-		"/admin/tickets": [16,[2,8]],
+		"/admin/tickets": [~16,[2,8]],
 		"/test": [17]
 	};
 

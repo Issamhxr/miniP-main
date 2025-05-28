@@ -19,6 +19,8 @@
   let newEmployee = {
     name: "",
     email: "",
+    password: "",
+    confirmPassword: "",
     userType: "employee",
     status: "libre",
   };
@@ -73,10 +75,16 @@
 
   async function addEmployee() {
     addError = "";
+    if (newEmployee.password !== newEmployee.confirmPassword) {
+      addError = "Passwords do not match.";
+      return;
+    }
     try {
       await pb.collection("users").create({
         name: newEmployee.name,
         email: newEmployee.email,
+        password: newEmployee.password,
+        passwordConfirm: newEmployee.confirmPassword,
         userType: newEmployee.userType,
         status: newEmployee.status,
         emailVisibility: true,
@@ -85,6 +93,8 @@
       newEmployee = {
         name: "",
         email: "",
+        password: "",
+        confirmPassword: "",
         userType: "employee",
         status: "libre",
       };
@@ -114,9 +124,10 @@
   />
   <button
     on:click={() => (showAddModal = true)}
-    style="padding: 0.5em 1em; border-radius: 0.25em; background: var(--accent); color: white; border: none;"
-    >Add Employee</button
+    style="padding: 0.5em 1em; border-radius: 0.25em; background: var(--primary); color: var(--primary-foreground); border: none;"
   >
+    Add Employee
+  </button>
 </div>
 
 {#if showAddModal}
@@ -140,6 +151,18 @@
         bind:value={newEmployee.email}
         required
       />
+      <input
+        type="password"
+        placeholder="Password"
+        bind:value={newEmployee.password}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        bind:value={newEmployee.confirmPassword}
+        required
+      />
       <select bind:value={newEmployee.userType} required>
         <option value="employee">Employee</option>
         <option value="emp">Emp</option>
@@ -158,7 +181,7 @@
         >
         <button
           type="submit"
-          style="background: var(--accent); color: white; border: none; padding: 0.5em 1em; border-radius: 0.25em;"
+          style="background: var(--primary); color: var(--primary-foreground); border: none; padding: 0.5em 1em; border-radius: 0.25em;"
           >Add</button
         >
       </div>
