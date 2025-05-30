@@ -8,7 +8,8 @@
     email: string;
     userType?: string;
     created: string;
-    status?: string; // Add status field
+    status?: string;
+    verified?: boolean;
   }
 
   let employees: Employee[] = [];
@@ -23,6 +24,7 @@
     confirmPassword: "",
     userType: "employee",
     status: "libre",
+    verified: false,
   };
   let addError = "";
 
@@ -49,7 +51,8 @@
           email: u.emailVisibility === false ? "Hidden" : (u.email ?? ""),
           userType: u.userType ?? "",
           created: u.created ?? "",
-          status: u.status ?? "libre", // Default to 'libre' if status is empty
+          status: u.status ?? "libre",
+          verified: Boolean(u.verified), // ensure boolean
         }));
     } catch (e) {
       error = "Failed to fetch employees.";
@@ -87,6 +90,7 @@
         passwordConfirm: newEmployee.confirmPassword,
         userType: newEmployee.userType,
         status: newEmployee.status,
+        verified: newEmployee.verified,
         emailVisibility: true,
       });
       showAddModal = false;
@@ -97,6 +101,7 @@
         confirmPassword: "",
         userType: "employee",
         status: "libre",
+        verified: false,
       };
       await fetchEmployees();
     } catch (e) {
@@ -115,6 +120,7 @@
   }
 </script>
 
+<h1>Employees</h1>
 <div style="margin-bottom: 1em; display: flex; gap: 1em; align-items: center;">
   <input
     type="text"
@@ -172,6 +178,11 @@
         <option value="non libre">Non libre</option>
         <option value="malade">Malade</option>
       </select>
+      <label style="font-weight: 500;">Verified</label>
+      <select bind:value={newEmployee.verified} required>
+        <option value={true}>Yes</option>
+        <option value={false}>No</option>
+      </select>
       {#if addError}
         <div style="color: red">{addError}</div>
       {/if}
@@ -203,7 +214,6 @@
         <th style="padding: 0.75em;">Email</th>
         <th style="padding: 0.75em;">Type</th>
         <th style="padding: 0.75em;">Status</th>
-        <!-- Add Status column -->
         <th style="padding: 0.75em;">Created</th>
         <th style="padding: 0.75em; text-align: center;">Actions</th>
       </tr>
@@ -218,19 +228,43 @@
       {:else}
         {#each filteredEmployees() as employee}
           <tr style="border-bottom: 1px solid var(--muted);">
-            <td style="padding: 0.75em;">{employee.name}</td>
-            <td style="padding: 0.75em;">{employee.email}</td>
-            <td style="padding: 0.75em;">{employee.userType}</td>
-            <td style="padding: 0.75em;">{employee.status}</td>
-            <td style="padding: 0.75em;"
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{employee.name}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{employee.email}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{employee.userType}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{employee.status}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
               >{new Date(employee.created).toLocaleDateString()}</td
             >
-            <td style="padding: 0.75em; text-align: center;">
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+            >
               <button
                 on:click={() => deleteEmployee(employee.id)}
-                style="background: #e74c3c; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer;"
-                >Delete</button
+                style="background: #e74c3c; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer; margin-right: 0.5em;"
               >
+                Delete
+              </button>
+              {#if employee.email !== "Hidden"}
+                <button
+                  on:click={() => window.open(`mailto:${employee.email}`)}
+                  style="background: #3498db; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer;"
+                >
+                  Send Mail
+                </button>
+              {/if}
             </td>
           </tr>
         {/each}

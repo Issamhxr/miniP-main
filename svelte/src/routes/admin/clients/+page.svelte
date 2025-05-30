@@ -93,6 +93,8 @@
   }
 </script>
 
+<h1>Clients</h1>
+
 <div style="margin-bottom: 1em; display: flex; gap: 1em; align-items: center;">
   <input
     type="text"
@@ -169,8 +171,9 @@
   >
     <thead style="background: var(--muted);">
       <tr>
-        <th style="padding: 0.75em;">Name</th>
         <th style="padding: 0.75em;">Email</th>
+        <th style="padding: 0.75em;">Name</th>
+        <th style="padding: 0.75em;">Verified</th>
         <th style="padding: 0.75em;">Created</th>
         <th style="padding: 0.75em;">Actions</th>
       </tr>
@@ -178,25 +181,46 @@
     <tbody>
       {#if filteredClients().length === 0}
         <tr>
-          <td colspan="4" style="text-align: center; padding: 1em;">
+          <td colspan="5" style="text-align: center; padding: 1em;">
             No clients found.
           </td>
         </tr>
       {:else}
         {#each filteredClients() as client}
           <tr style="border-bottom: 1px solid var(--muted);">
-            <td style="padding: 0.75em;">{client.name}</td>
-            <td style="padding: 0.75em;">{client.email}</td>
-            <td style="padding: 0.75em;">
-              {new Date(client.created).toLocaleDateString()}
-            </td>
-            <td style="padding: 0.75em;">
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{client.email}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{client.name}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{client.verified ? "Yes" : "No"}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{new Date(client.created).toLocaleDateString()}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+            >
               <button
                 on:click={() => deleteClient(client.id)}
-                style="color: #fff; background: #e74c3c; border: none; border-radius: 0.25em; padding: 0.4em 0.8em; cursor: pointer;"
+                style="color: #fff; background: #e74c3c; border: none; border-radius: 0.25em; padding: 0.4em 0.8em; cursor: pointer; margin-right: 0.5em;"
               >
                 Delete
               </button>
+              {#if client.email && client.email !== "Hidden"}
+                <button
+                  on:click={() => window.open(`mailto:${client.email}`)}
+                  style="background: #3498db; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer;"
+                >
+                  Send Mail
+                </button>
+              {/if}
             </td>
           </tr>
         {/each}

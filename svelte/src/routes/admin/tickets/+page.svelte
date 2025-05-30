@@ -9,6 +9,7 @@
     created: string;
     updated: string;
     assignedTo: string;
+    niveau?: string;
   }
 
   interface Employee {
@@ -36,6 +37,7 @@
         created: t.created ?? "",
         updated: t.updated ?? t.created ?? "",
         assignedTo: t.assignedTo ?? "Unassigned",
+        niveau: t.niveau,
       }));
     } catch (e) {
       error = "Failed to fetch tickets.";
@@ -138,6 +140,7 @@
       <th style="padding: 0.75em; text-align: left;">Title</th>
       <th style="padding: 0.75em; text-align: left;">Status</th>
       <th style="padding: 0.75em; text-align: left;">Assigned To</th>
+      <th style="padding: 0.75em; text-align: left;">Niveau</th>
       <th style="padding: 0.75em; text-align: left;">Created</th>
       <th style="padding: 0.75em; text-align: left;">Updated</th>
       <th style="padding: 0.75em; text-align: left;">Actions</th>
@@ -146,20 +149,20 @@
   <tbody>
     {#if loading}
       <tr
-        ><td colspan="6" style="padding: 1em; text-align: center;"
+        ><td colspan="7" style="padding: 1em; text-align: center;"
           >Loading tickets...</td
         ></tr
       >
     {:else if error}
       <tr
-        ><td colspan="6" style="padding: 1em; text-align: center; color: red;"
+        ><td colspan="7" style="padding: 1em; text-align: center; color: red;"
           >{error}</td
         ></tr
       >
     {:else if filteredTickets().length === 0}
       <tr>
         <td
-          colspan="6"
+          colspan="7"
           style="padding: 1em; text-align: center; color: var(--muted-foreground);"
           >No tickets found.</td
         >
@@ -191,6 +194,11 @@
                 <option value={emp.id}>{emp.name}</option>
               {/each}
             </select>
+          </td>
+          <td style="padding: 0.75em;">
+            {ticket.niveau
+              ? ticket.niveau.charAt(0).toUpperCase() + ticket.niveau.slice(1)
+              : "Non spécifié"}
           </td>
           <td style="padding: 0.75em;"
             >{new Date(ticket.created).toLocaleDateString()}</td
