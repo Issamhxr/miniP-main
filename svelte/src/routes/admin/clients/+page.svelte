@@ -8,6 +8,7 @@
     email: string;
     created: string;
     verify?: string;
+    userType?: string;
   }
 
   let clients: Client[] = [];
@@ -33,6 +34,7 @@
         email: c.email ?? "",
         created: c.created ?? "",
         verify: c.verify ?? "non verified",
+        userType: c.userType ?? "",
       }));
     } catch (e) {
       error = "Failed to fetch clients.";
@@ -175,6 +177,7 @@
       <tr>
         <th style="padding: 0.75em;">Email</th>
         <th style="padding: 0.75em;">Name</th>
+        <th style="padding: 0.75em;">Type</th>
         <th style="padding: 0.75em;">Verified</th>
         <th style="padding: 0.75em;">Created</th>
         <th style="padding: 0.75em;">Actions</th>
@@ -183,7 +186,7 @@
     <tbody>
       {#if filteredClients().length === 0}
         <tr>
-          <td colspan="5" style="text-align: center; padding: 1em;">
+          <td colspan="6" style="text-align: center; padding: 1em;">
             No clients found.
           </td>
         </tr>
@@ -200,20 +203,31 @@
             >
             <td
               style="padding: 0.75em; vertical-align: middle; text-align: center;"
+              >{client.userType}</td
+            >
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
             >
               <button
-              style="background: {client.verify === 'non verified' ? '#2ecc71' : '#e67e22'}; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer;"
-              on:click={async () => {
-                try {
-                const newVerify = client.verify === "non verified" ? "verified" : "non verified";
-                await pb.collection("users").update(client.id, { verify: newVerify });
-                await fetchClients();
-                } catch (e) {
-                alert("Failed to update verify status.");
-                }
-              }}
+                style="background: {client.verify === 'non verified'
+                  ? '#2ecc71'
+                  : '#e67e22'}; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer;"
+                on:click={async () => {
+                  try {
+                    const newVerify =
+                      client.verify === "non verified"
+                        ? "verified"
+                        : "non verified";
+                    await pb
+                      .collection("users")
+                      .update(client.id, { verify: newVerify });
+                    await fetchClients();
+                  } catch (e) {
+                    alert("Failed to update verify status.");
+                  }
+                }}
               >
-              {client.verify === "non verified" ? "Verified" : "Non Verified"}
+                {client.verify === "non verified" ? "Verified" : "Non Verified"}
               </button>
             </td>
             <td
