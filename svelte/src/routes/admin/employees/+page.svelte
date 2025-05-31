@@ -9,7 +9,7 @@
     userType?: string;
     created: string;
     status?: string;
-    verified?: boolean;
+    verify?: string;
   }
 
   let employees: Employee[] = [];
@@ -24,7 +24,6 @@
     confirmPassword: "",
     userType: "employee",
     status: "libre",
-    verified: false,
   };
   let addError = "";
 
@@ -52,7 +51,7 @@
           userType: u.userType ?? "",
           created: u.created ?? "",
           status: u.status ?? "libre",
-          verified: Boolean(u.verified), // ensure boolean
+          verify: u.verify ?? "non verified",
         }));
     } catch (e) {
       error = "Failed to fetch employees.";
@@ -90,7 +89,6 @@
         passwordConfirm: newEmployee.confirmPassword,
         userType: newEmployee.userType,
         status: newEmployee.status,
-        verified: newEmployee.verified,
         emailVisibility: true,
       });
       showAddModal = false;
@@ -101,7 +99,6 @@
         confirmPassword: "",
         userType: "employee",
         status: "libre",
-        verified: false,
       };
       await fetchEmployees();
     } catch (e) {
@@ -178,11 +175,6 @@
         <option value="non libre">Non libre</option>
         <option value="malade">Malade</option>
       </select>
-      <label style="font-weight: 500;">Verified</label>
-      <select bind:value={newEmployee.verified} required>
-        <option value={true}>Yes</option>
-        <option value={false}>No</option>
-      </select>
       {#if addError}
         <div style="color: red">{addError}</div>
       {/if}
@@ -216,12 +208,13 @@
         <th style="padding: 0.75em;">Status</th>
         <th style="padding: 0.75em;">Created</th>
         <th style="padding: 0.75em; text-align: center;">Actions</th>
+        <th style="padding: 0.75em;">Verify</th>
       </tr>
     </thead>
     <tbody>
       {#if filteredEmployees().length === 0}
         <tr>
-          <td colspan="6" style="text-align: center; padding: 1em;"
+          <td colspan="7" style="text-align: center; padding: 1em;"
             >No employees found.</td
           >
         </tr>
@@ -265,6 +258,24 @@
                   Send Mail
                 </button>
               {/if}
+            </td>
+            <td
+              style="padding: 0.75em; vertical-align: middle; text-align: center;"
+            >
+              <button
+              style="background: {employee.verify === 'non verified' ? '#2ecc71' : '#e67e22'}; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer;"
+              on:click={async () => {
+                try {
+                const newVerify = employee.verify === "non verified" ? "verified" : "non verified";
+                await pb.collection("users").update(employee.id, { verify: newVerify });
+                await fetchEmployees();
+                } catch (e) {
+                alert("Failed to update verify status.");
+                }
+              }}
+              >
+              {employee.verify === "non verified" ? "Verified" : "Non Verified"}
+              </button>
             </td>
           </tr>
         {/each}

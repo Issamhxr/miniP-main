@@ -7,6 +7,7 @@
     name: string;
     email: string;
     created: string;
+    verify?: string;
   }
 
   let clients: Client[] = [];
@@ -31,6 +32,7 @@
         name: c.name ?? "",
         email: c.email ?? "",
         created: c.created ?? "",
+        verify: c.verify ?? "non verified",
       }));
     } catch (e) {
       error = "Failed to fetch clients.";
@@ -198,8 +200,22 @@
             >
             <td
               style="padding: 0.75em; vertical-align: middle; text-align: center;"
-              >{client.verified ? "Yes" : "No"}</td
             >
+              <button
+              style="background: {client.verify === 'non verified' ? '#2ecc71' : '#e67e22'}; color: white; border: none; border-radius: 0.25em; padding: 0.25em 0.75em; cursor: pointer;"
+              on:click={async () => {
+                try {
+                const newVerify = client.verify === "non verified" ? "verified" : "non verified";
+                await pb.collection("users").update(client.id, { verify: newVerify });
+                await fetchClients();
+                } catch (e) {
+                alert("Failed to update verify status.");
+                }
+              }}
+              >
+              {client.verify === "non verified" ? "Verified" : "Non Verified"}
+              </button>
+            </td>
             <td
               style="padding: 0.75em; vertical-align: middle; text-align: center;"
               >{new Date(client.created).toLocaleDateString()}</td

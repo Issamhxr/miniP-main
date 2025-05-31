@@ -177,9 +177,18 @@
               on:change={(e) => updateStatus(ticket.id, e.target.value)}
               style="padding: 0.25em 0.5em; border-radius: 0.25em;"
             >
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Closed">Closed</option>
+              <option value="Ouvert">Ouvert</option>
+              <option value="Assigné">Assigné</option>
+              <option value="En cours de résolution"
+                >En cours de résolution</option
+              >
+              <option value="Résolu">Résolu</option>
+              <option value="Réouvert">Réouvert</option>
+              <option value="Vérifié">Vérifié</option>
+              <option value="Fermé">Fermé</option>
+              <option value="Ne peut être reproduit"
+                >Ne peut être reproduit</option
+              >
             </select>
           </td>
           <td style="padding: 0.75em;">
